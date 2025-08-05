@@ -6,3 +6,7 @@ La aplicacion devolvera los calculos de estos y mostrar el valor total a pagar e
 
 ## Autores
 Esto esta siendo realizado por Paull Harry Palacio Goez y Andre Rivas Garcia
+
+## Link Audio Explicativo sobre el tema
+
+https://drive.google.com/drive/folders/1fSU6wTmUQqWg4ZMv37Z1zxNohdVUYFGI?usp=drive_link
