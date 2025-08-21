@@ -28,5 +28,5 @@ Esto esta siendo realizado por:
 
 ## Codigos
 
-1. [Interfaz Grafica](src/interfaz_consola.py)
+1. [Interfaz Grafica](src/model/interfaz_consola.py)
 2. [Test Calculadora de Impuestos de Venta](test/test_calculadora_impuestos.py)
