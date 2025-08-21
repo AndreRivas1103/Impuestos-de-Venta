@@ -56,9 +56,9 @@ class InterfazConsola:
             self.mostrar_resultados(resultado)
             
         except ValueError as e:
-            print(f"\n❌ Error: {e}")
+            print(f"\n Error: {e}")
         except Exception as e:
-            print(f"\n❌ Error inesperado: {e}")
+            print(f"\n Error inesperado: {e}")
     
     def mostrar_resultados(self, resultado: dict):
         """Muestra los resultados del cálculo de impuestos"""
@@ -103,9 +103,9 @@ class InterfazConsola:
                 print(f"{i}. {impuesto}")
             
         except ValueError as e:
-            print(f"\n❌ Error: {e}")
+            print(f"\n Error: {e}")
         except Exception as e:
-            print(f"\n❌ Error inesperado: {e}")
+            print(f"\n Error inesperado: {e}")
     
     def ejecutar(self):
         """Ejecuta la interfaz principal"""
@@ -125,13 +125,13 @@ class InterfazConsola:
                     print("\n¡Gracias por usar la Calculadora de Impuestos!")
                     break
                 else:
-                    print("\n❌ Opción no válida. Por favor, seleccione 1-4.")
+                    print("\n Opción no válida. Por favor, seleccione 1-4.")
                     
             except KeyboardInterrupt:
                 print("\n\n¡Hasta luego!")
                 break
             except Exception as e:
-                print(f"\n❌ Error inesperado: {e}")
+                print(f"\n Error inesperado: {e}")
 
 if __name__ == "__main__":
     interfaz = InterfazConsola()
