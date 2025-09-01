@@ -4,6 +4,12 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from model.calculadora_impuestos import CalculadoraImpuestos, CategoriaProducto
 
+# Constantes para las opciones del menú
+OPCION_CALCULAR = "1"
+OPCION_VER_CATEGORIAS = "2"
+OPCION_VER_IMPUESTOS = "3"
+OPCION_SALIR = "4"
+
 class InterfazConsola:
     def __init__(self):
         self.calculadora = CalculadoraImpuestos()
@@ -13,10 +19,10 @@ class InterfazConsola:
         print("\n" + "="*50)
         print("    CALCULADORA DE IMPUESTOS DE VENTA")
         print("="*50)
-        print("1. Calcular impuestos")
-        print("2. Ver categorías disponibles")
-        print("3. Ver impuestos por categoría")
-        print("4. Salir")
+        print(f"{OPCION_CALCULAR}. Calcular impuestos")
+        print(f"{OPCION_VER_CATEGORIAS}. Ver categorías disponibles")
+        print(f"{OPCION_VER_IMPUESTOS}. Ver impuestos por categoría")
+        print(f"{OPCION_SALIR}. Salir")
         print("-"*50)
     
     def mostrar_categorias(self):
@@ -113,19 +119,19 @@ class InterfazConsola:
             self.mostrar_menu_principal()
             
             try:
-                opcion = input("Seleccione una opción (1-4): ").strip()
+                opcion = input(f"Seleccione una opción ({OPCION_CALCULAR}-{OPCION_SALIR}): ").strip()
                 
-                if opcion == "1":
+                if opcion == OPCION_CALCULAR:
                     self.calcular_impuestos_interfaz()
-                elif opcion == "2":
+                elif opcion == OPCION_VER_CATEGORIAS:
                     self.mostrar_categorias()
-                elif opcion == "3":
+                elif opcion == OPCION_VER_IMPUESTOS:
                     self.ver_impuestos_por_categoria()
-                elif opcion == "4":
+                elif opcion == OPCION_SALIR:
                     print("\n¡Gracias por usar la Calculadora de Impuestos!")
                     break
                 else:
-                    print("\n Opción no válida. Por favor, seleccione 1-4.")
+                    print(f"\n Opción no válida. Por favor, seleccione {OPCION_CALCULAR}-{OPCION_SALIR}.")
                     
             except KeyboardInterrupt:
                 print("\n\n¡Hasta luego!")
