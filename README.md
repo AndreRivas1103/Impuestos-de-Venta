@@ -10,7 +10,7 @@ La aplicacion devolvera los calculos de estos y mostrar el valor total a pagar e
 
 ### Pasos para ejecutar
 1. Descargar o clonar el proyecto
-2. Abrir una terminal en la carpeta del proyecto
+2. Abrir una terminal(Bash, Simbolo del Sistema, etc.) en la carpeta del proyecto
 3. Ejecutar el programa principal:
    ```bash
    python main.py

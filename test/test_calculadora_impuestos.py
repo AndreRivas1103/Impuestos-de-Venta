@@ -1,155 +1,144 @@
 import sys
 import os
-import unittest
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(_file_))))
 
-from model.calculadora_impuestos import CalculadoraImpuestos, CategoriaProducto, TipoImpuesto
+from model.calculadora_impuestos import CalculadoraImpuestos, CategoriaProducto
 
-class TestCalculadoraImpuestos(unittest.TestCase):
-    
-    def setUp(self):
-        """Configuración inicial para cada prueba"""
+# Constantes para las opciones del menú
+OPCION_CALCULAR = "1"
+OPCION_VER_CATEGORIAS = "2"
+OPCION_VER_IMPUESTOS = "3"
+OPCION_SALIR = "4"
+
+class InterfazConsola:
+    def _init_(self):
         self.calculadora = CalculadoraImpuestos()
     
-    # ===== PRUEBAS NORMALES =====
+    def mostrar_menu_principal(self):
+        """Muestra el menú principal de la aplicación"""
+        print("\n" + "="*50)
+        print("    CALCULADORA DE IMPUESTOS DE VENTA")
+        print("="*50)
+        print(f"{OPCION_CALCULAR}. Calcular impuestos")
+        print(f"{OPCION_VER_CATEGORIAS}. Ver categorías disponibles")
+        print(f"{OPCION_VER_IMPUESTOS}. Ver impuestos por categoría")
+        print(f"{OPCION_SALIR}. Salir")
+        print("-"*50)
     
-    def test_calcular_impuestos_alimentos_basicos(self):
-        """Prueba normal: Calcular impuestos para alimentos básicos (IVA 5%)"""
-        valor_base = 1000
-        categoria = CategoriaProducto.ALIMENTOS_BASICOS
-        
-        resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
-        
-        self.assertEqual(resultado['valor_base'], 1000)
-        self.assertEqual(resultado['categoria'], 'Alimentos Básicos')
-        self.assertEqual(resultado['impuestos']['IVA 5%'], 50)
-        self.assertEqual(resultado['total_impuestos'], 50)
-        self.assertEqual(resultado['valor_total'], 1050)
-    
-    def test_calcular_impuestos_otros_productos(self):
-        """Prueba normal: Calcular impuestos para otros productos (IVA 19%)"""
-        valor_base = 2000
-        categoria = CategoriaProducto.OTROS
-        
-        resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
-        
-        self.assertEqual(resultado['valor_base'], 2000)
-        self.assertEqual(resultado['categoria'], 'Otros')
-        self.assertEqual(resultado['impuestos']['IVA 19%'], 380)
-        self.assertEqual(resultado['total_impuestos'], 380)
-        self.assertEqual(resultado['valor_total'], 2380)
-    
-    def test_calcular_impuestos_servicios_publicos(self):
-        """Prueba normal: Calcular impuestos para servicios públicos (Exento)"""
-        valor_base = 500
-        categoria = CategoriaProducto.SERVICIOS_PUBLICOS
-        
-        resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
-        
-        self.assertEqual(resultado['valor_base'], 500)
-        self.assertEqual(resultado['categoria'], 'Servicios Públicos')
-        self.assertEqual(resultado['impuestos']['Exento'], 0)
-        self.assertEqual(resultado['total_impuestos'], 0)
-        self.assertEqual(resultado['valor_total'], 500)
-    
-    def test_obtener_categorias_disponibles(self):
-        """Prueba normal: Obtener lista de categorías disponibles"""
+    def mostrar_categorias(self):
+        """Muestra las categorías disponibles"""
+        print("\n" + "="*40)
+        print("CATEGORÍAS DISPONIBLES:")
+        print("="*40)
         categorias = self.calculadora.obtener_categorias_disponibles()
-        
-        self.assertIsInstance(categorias, list)
-        self.assertEqual(len(categorias), 6)
-        self.assertIn('Alimentos Básicos', categorias)
-        self.assertIn('Licores', categorias)
-        self.assertIn('Bolsas Plásticas', categorias)
-        self.assertIn('Combustibles', categorias)
-        self.assertIn('Servicios Públicos', categorias)
-        self.assertIn('Otros', categorias)
+        for i, categoria in enumerate(categorias, 1):
+            print(f"{i}. {categoria}")
+        print("-"*40)
     
-    # ===== PRUEBAS EXTRAORDINARIAS =====
+    def obtener_categoria_por_numero(self, numero: int) -> CategoriaProducto:
+        """Convierte un número en la categoría correspondiente"""
+        categorias = list(CategoriaProducto)
+        if 1 <= numero <= len(categorias):
+            return categorias[numero - 1]
+        else:
+            raise ValueError(f"Número de categoría inválido: {numero}")
     
-    def test_calcular_impuestos_licores_multiple(self):
-        """Prueba extraordinaria: Calcular impuestos para licores (IVA 19% + Impuesto Licores)"""
-        valor_base = 1000
-        categoria = CategoriaProducto.LICORES
+    def calcular_impuestos_interfaz(self):
+        """Interfaz para calcular impuestos"""
+        print("\n" + "="*40)
+        print("CALCULAR IMPUESTOS")
+        print("="*40)
         
-        resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
+        self.mostrar_categorias()
         
-        self.assertEqual(resultado['valor_base'], 1000)
-        self.assertEqual(resultado['categoria'], 'Licores')
-        self.assertEqual(resultado['impuestos']['IVA 19%'], 190)
-        self.assertEqual(resultado['impuestos']['Impuesto de Rentas a los Licores'], 250)
-        self.assertEqual(resultado['total_impuestos'], 440)
-        self.assertEqual(resultado['valor_total'], 1440)
+        try:
+            valor_base = float(input("Ingrese el valor base del producto: $"))
+            
+            num_categoria = int(input("Ingrese el número de la categoría: "))
+            categoria = self.obtener_categoria_por_numero(num_categoria)
+            
+            resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
+            
+            self.mostrar_resultados(resultado)
+            
+        except ValueError as e:
+            print(f"\n Error: {e}. Ingresaste {valor_base} ")
+        except Exception as e:
+            print(f"\n Error inesperado: {e}")
     
-    def test_calcular_impuestos_combustibles_multiple(self):
-        """Prueba extraordinaria: Calcular impuestos para combustibles (IVA 19% + INC)"""
-        valor_base = 5000
-        categoria = CategoriaProducto.COMBUSTIBLES
+    def mostrar_resultados(self, resultado: dict):
+        """Muestra los resultados del cálculo de impuestos"""
+        print("\n" + "="*50)
+        print("RESULTADOS DEL CÁLCULO")
+        print("="*50)
+        print(f"Valor Base: ${resultado['valor_base']:,.2f}")
+        print(f"Categoría: {resultado['categoria']}")
+        print("-"*50)
+        print("DESGLOSE DE IMPUESTOS:")
         
-        resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
+        impuestos = resultado['impuestos']
+        if not any(impuestos.values()):
+            print("   • Exento de impuestos")
+        else:
+            for impuesto, valor in impuestos.items():
+                if valor > 0:
+                    print(f"   • {impuesto}: ${valor:,.2f}")
         
-        self.assertEqual(resultado['valor_base'], 5000)
-        self.assertEqual(resultado['categoria'], 'Combustibles')
-        self.assertEqual(resultado['impuestos']['IVA 19%'], 950)
-        self.assertEqual(resultado['impuestos']['Impuesto Nacional al Consumo'], 400)
-        self.assertEqual(resultado['total_impuestos'], 1350)
-        self.assertEqual(resultado['valor_total'], 6350)
+        print("-"*50)
+        print(f"Total Impuestos: ${resultado['total_impuestos']:,.2f}")
+        print(f"VALOR TOTAL: ${resultado['valor_total']:,.2f}")
+        print("="*50)
     
-    def test_calcular_impuestos_bolsas_plasticas_multiple(self):
-        """Prueba extraordinaria: Calcular impuestos para bolsas plásticas (IVA 19% + Impuesto Bolsas)"""
-        valor_base = 100
-        categoria = CategoriaProducto.BOLSAS_PLASTICAS
+    def ver_impuestos_por_categoria(self):
+        """Muestra los impuestos aplicables por categoría"""
+        print("\n" + "="*50)
+        print("IMPUESTOS POR CATEGORÍA")
+        print("="*50)
         
-        resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
+        self.mostrar_categorias()
         
-        self.assertEqual(resultado['valor_base'], 100)
-        self.assertEqual(resultado['categoria'], 'Bolsas Plásticas')
-        self.assertEqual(resultado['impuestos']['IVA 19%'], 19)
-        self.assertEqual(resultado['impuestos']['Impuesto de Bolsas Plásticas'], 20)
-        self.assertEqual(resultado['total_impuestos'], 39)
-        self.assertEqual(resultado['valor_total'], 139)
+        try:
+            num_categoria = int(input("Ingrese el número de la categoría: "))
+            categoria = self.obtener_categoria_por_numero(num_categoria)
+            
+            impuestos = self.calculadora.obtener_impuestos_por_categoria(categoria)
+            
+            print(f"\nImpuestos aplicables para '{categoria.value}':")
+            print("-"*40)
+            for i, impuesto in enumerate(impuestos, 1):
+                print(f"{i}. {impuesto.value}")
+            
+        except ValueError as e:
+            print(f"\n Error: {e}")
+        except Exception as e:
+            print(f"\n Error inesperado: {e}")
     
-    def test_obtener_impuestos_por_categoria(self):
-        """Prueba extraordinaria: Obtener impuestos específicos por categoría"""
-        categoria = CategoriaProducto.LICORES
-        impuestos = self.calculadora.obtener_impuestos_por_categoria(categoria)
-        
-        self.assertIsInstance(impuestos, list)
-        self.assertEqual(len(impuestos), 2)
-        self.assertIn('IVA 19%', impuestos)
-        self.assertIn('Impuesto de Rentas a los Licores', impuestos)
-    
-    # ===== PRUEBAS DE ERROR =====
-    
-    def test_error_valor_base_negativo(self):
-        """Prueba de error: Valor base negativo"""
-        valor_base = -100
-        categoria = CategoriaProducto.OTROS
-        
-        with self.assertRaises(ValueError) as context:
-            self.calculadora.calcular_impuestos(valor_base, categoria)
-        
-        self.assertIn("El valor base debe ser mayor a 0", str(context.exception))
-    
-    def test_error_valor_base_cero(self):
-        """Prueba de error: Valor base igual a cero"""
-        valor_base = 0
-        categoria = CategoriaProducto.ALIMENTOS_BASICOS
-        
-        with self.assertRaises(ValueError) as context:
-            self.calculadora.calcular_impuestos(valor_base, categoria)
-        
-        self.assertIn("El valor base debe ser mayor a 0", str(context.exception))
-    
-    def test_error_categoria_invalida(self):
-        """Prueba de error: Categoría inválida"""
-        valor_base = 1000
-        categoria_invalida = "Categoria Invalida"
-        
-        with self.assertRaises(ValueError) as context:
-            self.calculadora.calcular_impuestos(valor_base, categoria_invalida)
-        
-        self.assertIn("Categoría no válida", str(context.exception))
+    def ejecutar(self):
+        """Ejecuta la interfaz principal"""
+        while True:
+            self.mostrar_menu_principal()
+            
+            try:
+                opcion = input(f"Seleccione una opción ({OPCION_CALCULAR}-{OPCION_SALIR}): ").strip()
+                
+                if opcion == OPCION_CALCULAR:
+                    self.calcular_impuestos_interfaz()
+                elif opcion == OPCION_VER_CATEGORIAS:
+                    self.mostrar_categorias()
+                elif opcion == OPCION_VER_IMPUESTOS:
+                    self.ver_impuestos_por_categoria()
+                elif opcion == OPCION_SALIR:
+                    print("\n¡Gracias por usar la Calculadora de Impuestos!")
+                    break
+                else:
+                    print(f"\nIngresaste la opción '{opcion}' y no es válida. Por favor, seleccione {OPCION_CALCULAR}-{OPCION_SALIR}.")
+                    
+            except KeyboardInterrupt:
+                print("\n\n¡Hasta luego!")
+                break
+            except Exception as e:
+                print(f"\n Error inesperado: {e}")
 
-if __name__ == '__main__':
-    unittest.main(verbosity=2) 
+if __name__ == "_main_":
+    interfaz = InterfazConsola()
+    interfaz.ejecutar()
