@@ -8,6 +8,29 @@ La aplicacion devolvera los calculos de estos y mostrar el valor total a pagar e
 - Asegurate de tener Python 3.6 o superior (si no lo tienes descargalo aquí: [Python.org](https://www.python.org/downloads/))
 
 
+## Estructura del Proyecto
+
+```
+Impuestos-de-Venta/
+│
+├── docs/                                      
+│   └── Libro de excel - Casos de prueba - Andre y Paull.xlsx
+│
+├── src/                                       
+│   ├── controller/                            
+│   ├── model/                                 
+│   │   └── calculadora_impuestos.py           
+│   └── view/                                  
+│       └── interfaz_consola.py                
+│
+├── test/                                      
+│   └── test_calculadora_impuestos.py          
+│
+├── main.py                                    
+└── README.md                                  
+```
+
+
 ### Pasos para ejecutar
 1. Descargar o clonar el proyecto
 2. Abrir una terminal(Bash, Simbolo del Sistema, etc.) en la carpeta del proyecto
