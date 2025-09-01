@@ -43,22 +43,29 @@ class InterfazConsola:
         else:
             raise ValueError(f"Número de categoría inválido: {numero}")
     
-    def calcular_impuestos_interfaz(self):
-        """Interfaz para calcular impuestos"""
+    def solicitar_datos_producto(self):
+        """Solicita los datos del producto al usuario"""
         print("\n" + "="*40)
         print("CALCULAR IMPUESTOS")
         print("="*40)
         
         self.mostrar_categorias()
         
+        valor_base = float(input("Ingrese el valor base del producto: $"))
+        num_categoria = int(input("Ingrese el número de la categoría: "))
+        categoria = self.obtener_categoria_por_numero(num_categoria)
+        
+        return valor_base, categoria
+    
+    def calcular_impuestos(self, valor_base: float, categoria: CategoriaProducto):
+        """Calcula los impuestos usando la calculadora"""
+        return self.calculadora.calcular_impuestos(valor_base, categoria)
+    
+    def calcular_impuestos_interfaz(self):
+        """Interfaz principal para calcular impuestos - Interactúa con el usuario, valida entrada, hace cálculo y muestra resultado."""
         try:
-            valor_base = float(input("Ingrese el valor base del producto: $"))
-            
-            num_categoria = int(input("Ingrese el número de la categoría: "))
-            categoria = self.obtener_categoria_por_numero(num_categoria)
-            
-            resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
-            
+            valor_base, categoria = self.solicitar_datos_producto()
+            resultado = self.calcular_impuestos(valor_base, categoria)
             self.mostrar_resultados(resultado)
             
         except ValueError as e:
