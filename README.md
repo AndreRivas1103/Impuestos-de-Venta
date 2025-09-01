@@ -5,7 +5,8 @@ Esta aplicacion permite al usuario calcular los impuestos que debe pagar segun s
 La aplicacion devolvera los calculos de estos y mostrar el valor total a pagar esperado
 
 ### Requisitos
-- Python 3.6 o superior
+- Asegurate de tener Python 3.6 o superior (si no lo tienes descargalo aquí: [Python.org](https://www.python.org/downloads/))
+
 
 ### Pasos para ejecutar
 1. Descargar o clonar el proyecto
