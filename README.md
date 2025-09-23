@@ -67,6 +67,11 @@ Este proyecto esta siendo realizado por:
 - Paull Harry Palacio Goez 
 - Andre Rivas Garcia
 
+Interfaz gráfica realizada por:
+- Juan Sebastián Villa Rodas
+- David Taborda Noreña
+
+
 ## Link de Audio Explicativo sobre el tema
 
 [Audio Google Drive](https://drive.google.com/drive/folders/1fSU6wTmUQqWg4ZMv37Z1zxNohdVUYFGI?usp=drive_link)
