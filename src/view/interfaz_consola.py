@@ -52,19 +52,41 @@ class InterfazConsola:
         self.mostrar_categorias()
         
         try:
-            valor_base = float(input("Ingrese el valor base del producto: $"))
+            # Validar entrada del valor base
+            valor_input = input("Ingrese el valor base del producto: $").strip()
+            if not valor_input:
+                print("\n❌ Error: Debe ingresar un valor base")
+                return
             
-            num_categoria = int(input("Ingrese el número de la categoría: "))
+            try:
+                valor_base = float(valor_input)
+            except ValueError:
+                print("\n❌ Error: El valor debe ser un número válido (ej: 1000, 1500.50)")
+                return
+            
+            # Validar entrada de categoría
+            num_categoria_input = input("Ingrese el número de la categoría: ").strip()
+            if not num_categoria_input:
+                print("\n❌ Error: Debe seleccionar una categoría")
+                return
+            
+            try:
+                num_categoria = int(num_categoria_input)
+            except ValueError:
+                print("\n❌ Error: Debe ingresar un número válido para la categoría")
+                return
+            
             categoria = self.obtener_categoria_por_numero(num_categoria)
-            
             resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
-            
             self.mostrar_resultados(resultado)
             
         except ValueError as e:
-            print(f"\n Error: {e}")
+            print(f"\n❌ Error de validación: {e}")
+        except TypeError as e:
+            print(f"\n❌ Error de tipo de datos: {e}")
         except Exception as e:
-            print(f"\n Error inesperado: {e}")
+            print(f"\n❌ Error inesperado: {e}")
+            print("Por favor, intente nuevamente o contacte al soporte técnico.")
     
     def mostrar_resultados(self, resultado: dict):
         """Muestra los resultados del cálculo de impuestos"""
@@ -98,20 +120,30 @@ class InterfazConsola:
         self.mostrar_categorias()
         
         try:
-            num_categoria = int(input("Ingrese el número de la categoría: "))
-            categoria = self.obtener_categoria_por_numero(num_categoria)
+            num_categoria_input = input("Ingrese el número de la categoría: ").strip()
+            if not num_categoria_input:
+                print("\n❌ Error: Debe seleccionar una categoría")
+                return
             
+            try:
+                num_categoria = int(num_categoria_input)
+            except ValueError:
+                print("\n❌ Error: Debe ingresar un número válido para la categoría")
+                return
+            
+            categoria = self.obtener_categoria_por_numero(num_categoria)
             impuestos = self.calculadora.obtener_impuestos_por_categoria(categoria)
             
-            print(f"\nImpuestos aplicables para '{categoria.value}':")
+            print(f"\n✅ Impuestos aplicables para '{categoria.value}':")
             print("-"*40)
             for i, impuesto in enumerate(impuestos, 1):
                 print(f"{i}. {impuesto}")
             
         except ValueError as e:
-            print(f"\n Error: {e}")
+            print(f"\n❌ Error de validación: {e}")
         except Exception as e:
-            print(f"\n Error inesperado: {e}")
+            print(f"\n❌ Error inesperado: {e}")
+            print("Por favor, intente nuevamente o contacte al soporte técnico.")
     
     def ejecutar(self):
         """Ejecuta la interfaz principal"""

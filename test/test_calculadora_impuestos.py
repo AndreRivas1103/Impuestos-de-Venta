@@ -14,7 +14,6 @@ class TestCalculadoraImpuestos(unittest.TestCase):
         self.calculadora = CalculadoraImpuestos()
     
     # CASOS NORMALES (4 tests)
-    
     def test_001_alimentos_basicos_iva_5(self):
         """Test caso normal: Cálculo de IVA 5% para alimentos básicos"""
         valor_base = 1000.0
@@ -69,7 +68,6 @@ class TestCalculadoraImpuestos(unittest.TestCase):
         self.assertEqual(resultado['valor_total'], 5950.0)
     
     # CASOS EXTRAORDINARIOS (4 tests)
-    
     def test_005_valor_muy_pequeno(self):
         """Test caso extraordinario: Valor muy pequeño (centavos)"""
         valor_base = 0.01
@@ -78,9 +76,10 @@ class TestCalculadoraImpuestos(unittest.TestCase):
         resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
         
         self.assertEqual(resultado['valor_base'], 0.01)
-        self.assertAlmostEqual(resultado['impuestos']['IVA 5%'], 0.0005, places=4)
-        self.assertAlmostEqual(resultado['total_impuestos'], 0.0005, places=4)
-        self.assertAlmostEqual(resultado['valor_total'], 0.0105, places=4)
+        # Con redondeo a 2 decimales, 0.0005 se redondea a 0.00
+        self.assertEqual(resultado['impuestos']['IVA 5%'], 0.0)
+        self.assertEqual(resultado['total_impuestos'], 0.0)
+        self.assertEqual(resultado['valor_total'], 0.01)
     
     def test_006_valor_muy_grande(self):
         """Test caso extraordinario: Valor muy grande (millones)"""
@@ -103,10 +102,11 @@ class TestCalculadoraImpuestos(unittest.TestCase):
         resultado = self.calculadora.calcular_impuestos(valor_base, categoria)
         
         self.assertEqual(resultado['valor_base'], 1234.567890)
-        self.assertAlmostEqual(resultado['impuestos']['IVA 19%'], 234.567899, places=6)
-        self.assertAlmostEqual(resultado['impuestos']['Impuesto de Bolsas Plásticas'], 246.913578, places=6)
-        self.assertAlmostEqual(resultado['total_impuestos'], 481.481477, places=6)
-        self.assertAlmostEqual(resultado['valor_total'], 1716.049367, places=6)
+        # Con redondeo a 2 decimales
+        self.assertEqual(resultado['impuestos']['IVA 19%'], 234.57)
+        self.assertEqual(resultado['impuestos']['Impuesto de Bolsas Plásticas'], 246.91)
+        self.assertEqual(resultado['total_impuestos'], 481.48)
+        self.assertEqual(resultado['valor_total'], 1716.05)
     
     def test_008_verificar_categorias_disponibles(self):
         """Test caso extraordinario: Verificar que todas las categorías están disponibles"""
@@ -126,7 +126,6 @@ class TestCalculadoraImpuestos(unittest.TestCase):
             self.assertIn(categoria, categorias)
     
     # CASOS DE ERROR (3 tests)
-    
     def test_009_error_valor_negativo(self):
         """Test caso de error: Valor base negativo"""
         valor_base = -100.0

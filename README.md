@@ -32,6 +32,8 @@ Impuestos-de-Venta/
 
 
 ### Pasos para ejecutar
+
+#### Interfaz de Consola
 1. Descargar o clonar el proyecto
 2. Abrir una terminal(Bash, Simbolo del Sistema, etc.) en la carpeta del proyecto
 3. Ejecutar el programa principal:
@@ -44,10 +46,36 @@ Impuestos-de-Venta/
    python src/view/interfaz_consola.py
    ```
 
+#### Interfaz Gráfica (GUI con Kivy)
+1. Instalar las dependencias necesarias:
+   ```bash
+   pip install kivy
+   ```
+   
+2. Ejecutar la interfaz gráfica:
+   ```bash
+   python src/view/interfaz_gui.py
+   ```
+
 ### Ejecutar pruebas
 ```bash
 python test/test_calculadora_impuestos.py
 ```
+
+### Generar Ejecutable para Windows
+Para crear un ejecutable independiente de Windows:
+
+1. Instalar PyInstaller:
+   ```bash
+   pip install pyinstaller
+   ```
+
+2. Ejecutar el script de build:
+   ```bash
+   python build_executable.py
+   ```
+
+3. El ejecutable se generará en la carpeta `dist/CalculadoraImpuestos/`
 
 ## Características
 
@@ -59,7 +87,10 @@ python test/test_calculadora_impuestos.py
   - Impuesto de Rentas a los Licores
   - Impuesto de Bolsas Plásticas
 - Interfaz de consola 
-- Pruebas unitarias 
+- Interfaz gráfica moderna con Kivy
+- Pruebas unitarias
+- Control de excepciones y mensajes de error amigables
+- Código limpio y bien documentado 
 
 
 ## Autores
@@ -70,6 +101,11 @@ Este proyecto esta siendo realizado por:
 Interfaz gráfica realizada por:
 - Juan Sebastián Villa Rodas
 - David Taborda Noreña
+
+## Equipo de Desarrollo
+- **Backend y Lógica de Negocio**: Paull Harry Palacio Goez, Andre Rivas Garcia
+- **Interfaz Gráfica**: Juan Sebastián Villa Rodas, David Taborda Noreña
+- **Testing y QA**: Equipo completo
 
 
 ## Link de Audio Explicativo sobre el tema
