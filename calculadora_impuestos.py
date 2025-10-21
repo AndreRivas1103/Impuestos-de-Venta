@@ -115,4 +115,4 @@ class CalculadoraImpuestos:
         if categoria not in self.categorias_impuestos:
             raise ValueError(f"Categoría no válida: {categoria}")
         
-        return [imp.value for imp in self.categorias_impuestos[categoria]] 
+        return [imp.value for imp in self.categorias_impuestos[categoria]]

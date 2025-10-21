@@ -1,21 +1,16 @@
 
-"""
-Calculadora de Impuestos de Venta
-Archivo principal para ejecutar la aplicación
-"""
-
 import sys
 import os
 
-from interfaz_consola import InterfazConsola
+from interfaz_database import InterfazDatabase
 
 def main():
-    """Función principal que ejecuta la aplicación"""
+    """Función principal que ejecuta la aplicación con base de datos"""
     try:
-        print("Iniciando Calculadora de Impuestos de Venta...")
-        print("-" * 60)
+        print("Iniciando Calculadora de Impuestos de Venta con Base de Datos...")
+        print("-" * 70)
         
-        interfaz = InterfazConsola()
+        interfaz = InterfazDatabase()
         interfaz.ejecutar()
         
     except KeyboardInterrupt:
@@ -23,6 +18,7 @@ def main():
     except ImportError as e:
         print(f"\nError de importación: {e}")
         print("Asegúrese de que todas las dependencias estén instaladas correctamente.")
+        print("Ejecute: pip install -r requirements.txt")
     except Exception as e:
         print(f"\nError inesperado: {e}")
         print("Por favor, contacte al soporte técnico si el problema persiste.")

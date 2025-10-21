@@ -8,7 +8,6 @@ import os
 import json
 import datetime
 from typing import List, Dict
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -28,7 +27,7 @@ from kivy.metrics import dp
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.textinput import TextInput
 
-from model.calculadora_impuestos import CalculadoraImpuestos, CategoriaProducto
+from calculadora_impuestos import CalculadoraImpuestos, CategoriaProducto
 
 
 class CalculadoraImpuestosGUI(App):

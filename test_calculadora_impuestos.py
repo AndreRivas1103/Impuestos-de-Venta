@@ -1,9 +1,8 @@
 import sys
 import os
 import unittest
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.model.calculadora_impuestos import CalculadoraImpuestos, CategoriaProducto, TipoImpuesto
+from calculadora_impuestos import CalculadoraImpuestos, CategoriaProducto, TipoImpuesto
 
 
 class TestCalculadoraImpuestos(unittest.TestCase):
