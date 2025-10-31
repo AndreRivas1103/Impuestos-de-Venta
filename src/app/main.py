@@ -1,23 +1,16 @@
-
 """
-Calculadora de Impuestos de Venta
-Archivo principal para ejecutar la aplicación
+Entrada principal CLI para la Calculadora de Impuestos.
 """
 
-import sys
-import os
+from src.ui.interfaz_consola import InterfazConsola
 
-from interfaz_consola import InterfazConsola
 
 def main():
-    """Función principal que ejecuta la aplicación"""
     try:
         print("Iniciando Calculadora de Impuestos de Venta...")
         print("-" * 60)
-        
         interfaz = InterfazConsola()
         interfaz.ejecutar()
-        
     except KeyboardInterrupt:
         print("\n\n¡Hasta luego! Gracias por usar la Calculadora de Impuestos.")
     except ImportError as e:
@@ -26,9 +19,9 @@ def main():
     except Exception as e:
         print(f"\nError inesperado: {e}")
         print("Por favor, contacte al soporte técnico si el problema persiste.")
-        print("Información del error para el soporte:")
-        print(f"   - Tipo: {type(e).__name__}")
-        print(f"   - Mensaje: {str(e)}")
+
 
 if __name__ == "__main__":
     main()
+
+

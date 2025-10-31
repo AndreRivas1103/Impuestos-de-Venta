@@ -52,12 +52,14 @@ def crear_especificacion_pyinstaller():
 block_cipher = None
 
 a = Analysis(
-    ['src/view/interfaz_gui.py'],
+    ['src/ui/interfaz_gui.py'],
     pathex=[],
     binaries=[],
     datas=[
         ('src/model', 'src/model'),
-        ('test', 'test'),
+        ('src/db', 'src/db'),
+        ('src/ui', 'src/ui'),
+        ('tests', 'tests'),
         ('docs', 'docs'),
         ('README.md', '.'),
     ],

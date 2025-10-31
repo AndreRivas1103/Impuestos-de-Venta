@@ -9,7 +9,7 @@ import unittest
 import tempfile
 import shutil
 
-from database import BaseDatos
+from src.db.database import BaseDatos
 
 class TestBaseDatos(unittest.TestCase):
     """Test suite para la clase BaseDatos"""

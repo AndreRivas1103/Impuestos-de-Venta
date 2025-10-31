@@ -1,0 +1,5 @@
+"""
+Configuraciones de la aplicación.
+"""
+
+

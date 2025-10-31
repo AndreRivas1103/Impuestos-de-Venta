@@ -19,7 +19,8 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/your-repo/calculadora-impuestos-venta",
-    packages=find_packages(),
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: End Users/Desktop",
@@ -37,7 +38,8 @@ setup(
     install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "calculadora-impuestos=main:main",
+            "calculadora-impuestos=app.main:main",
+            "calculadora-impuestos-db=app.main_database:main",
         ],
     },
     include_package_data=True,

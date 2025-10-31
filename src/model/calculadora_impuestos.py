@@ -37,40 +37,22 @@ class CalculadoraImpuestos:
         }
     
     def calcular_impuestos(self, valor_base: float, categoria: CategoriaProducto) -> Dict:
-        """
-        Calcula los impuestos aplicables para un producto
-        
-        Args:
-            valor_base (float): Valor base del producto
-            categoria (CategoriaProducto): Categoría del producto
-            
-        Returns:
-            Dict: Diccionario con el desglose de impuestos
-            
-        Raises:
-            ValueError: Si el valor base es inválido o la categoría no existe
-            TypeError: Si los tipos de datos son incorrectos
-        """
         try:
-            # Validar tipos de datos
             if not isinstance(valor_base, (int, float)):
                 raise TypeError("El valor base debe ser un número")
             
             if not isinstance(categoria, CategoriaProducto):
                 raise TypeError("La categoría debe ser un valor válido de CategoriaProducto")
             
-            # Validar valor base
             if valor_base <= 0:
                 raise ValueError("El valor base debe ser mayor a 0")
             
-            if valor_base > 999999999:  # Límite razonable para evitar overflow
+            if valor_base > 999999999:
                 raise ValueError("El valor base es demasiado grande (máximo: $999,999,999)")
             
-            # Validar categoría
             if categoria not in self.categorias_impuestos:
                 raise ValueError(f"Categoría no válida: {categoria}")
             
-            # Calcular impuestos
             impuestos_aplicables = self.categorias_impuestos[categoria]
             desglose_impuestos = {}
             total_impuestos = 0
@@ -83,11 +65,10 @@ class CalculadoraImpuestos:
                         raise ValueError(f"Tasa de impuesto no definida para: {impuesto}")
                     
                     tasa = self.tasas_impuestos[impuesto]
-                    valor_impuesto = round(valor_base * tasa, 2)  # Redondear a 2 decimales
+                    valor_impuesto = round(valor_base * tasa, 2)
                     desglose_impuestos[impuesto.value] = valor_impuesto
                     total_impuestos += valor_impuesto
             
-            # Redondear totales
             total_impuestos = round(total_impuestos, 2)
             valor_total = round(valor_base + total_impuestos, 2)
             
@@ -100,19 +81,17 @@ class CalculadoraImpuestos:
             }
             
         except (ValueError, TypeError) as e:
-            # Re-lanzar errores de validación con mensajes más claros
             raise e
         except Exception as e:
-            # Capturar cualquier error inesperado
             raise Exception(f"Error inesperado al calcular impuestos: {str(e)}")
     
     def obtener_categorias_disponibles(self) -> List[str]:
-        """Retorna la lista de categorías disponibles"""
         return [cat.value for cat in CategoriaProducto]
     
     def obtener_impuestos_por_categoria(self, categoria: CategoriaProducto) -> List[str]:
-        """Retorna los impuestos aplicables para una categoría específica"""
         if categoria not in self.categorias_impuestos:
             raise ValueError(f"Categoría no válida: {categoria}")
         
         return [imp.value for imp in self.categorias_impuestos[categoria]]
+
+

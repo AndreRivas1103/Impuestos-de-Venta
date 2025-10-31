@@ -18,29 +18,21 @@ class BaseDatos:
     """Clase principal para manejar la base de datos SQLite"""
     
     def __init__(self, nombre_db: str = "calculadora_impuestos.db"):
-        """
-        Inicializa la conexión a la base de datos
-        
-        Args:
-            nombre_db (str): Nombre del archivo de base de datos
-        """
         self.nombre_db = nombre_db
         self.conexion = None
         self.cursor = None
     
     def conectar(self):
-        """Establece conexión con la base de datos"""
         try:
             self.conexion = sqlite3.connect(self.nombre_db)
             self.cursor = self.conexion.cursor()
-            self.conexion.execute("PRAGMA foreign_keys = ON")  # Habilitar claves foráneas
+            self.conexion.execute("PRAGMA foreign_keys = ON")
             return True
         except sqlite3.Error as e:
             print(f"Error al conectar con la base de datos: {e}")
             return False
     
     def desconectar(self):
-        """Cierra la conexión con la base de datos"""
         try:
             if self.cursor:
                 self.cursor.close()
@@ -56,17 +48,10 @@ class BaseDatos:
             pass
     
     def crear_tablas(self) -> bool:
-        """
-        Crea todas las tablas necesarias en la base de datos
-        
-        Returns:
-            bool: True si se crearon correctamente, False en caso contrario
-        """
         try:
             if not self.conectar():
                 return False
             
-            # Tabla de categorías
             self.cursor.execute("""
                 CREATE TABLE IF NOT EXISTS categorias (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,7 +62,6 @@ class BaseDatos:
                 )
             """)
             
-            # Tabla de productos
             self.cursor.execute("""
                 CREATE TABLE IF NOT EXISTS productos (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -92,7 +76,6 @@ class BaseDatos:
                 )
             """)
             
-            # Tabla de impuestos adicionales
             self.cursor.execute("""
                 CREATE TABLE IF NOT EXISTS impuestos_adicionales (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -105,7 +88,6 @@ class BaseDatos:
                 )
             """)
             
-            # Tabla de transacciones/ventas
             self.cursor.execute("""
                 CREATE TABLE IF NOT EXISTS transacciones (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -120,7 +102,6 @@ class BaseDatos:
                 )
             """)
             
-            # Crear índices para mejorar el rendimiento
             self.cursor.execute("CREATE INDEX IF NOT EXISTS idx_productos_categoria ON productos(categoria_id)")
             self.cursor.execute("CREATE INDEX IF NOT EXISTS idx_transacciones_fecha ON transacciones(fecha_transaccion)")
             self.cursor.execute("CREATE INDEX IF NOT EXISTS idx_productos_estado ON productos(estado)")
@@ -137,19 +118,7 @@ class BaseDatos:
             self.desconectar()
     
     def insertar_categoria(self, nombre: str, descripcion: str = "", tasa_iva: float = 0.19) -> bool:
-        """
-        Inserta una nueva categoría en la base de datos
-        
-        Args:
-            nombre (str): Nombre de la categoría
-            descripcion (str): Descripción de la categoría
-            tasa_iva (float): Tasa de IVA aplicable (0.0 a 1.0)
-            
-        Returns:
-            bool: True si se insertó correctamente, False en caso contrario
-        """
         try:
-            # Validar tasa de IVA
             if tasa_iva < 0 or tasa_iva > 1:
                 return False
             
@@ -175,19 +144,6 @@ class BaseDatos:
     
     def insertar_producto(self, nombre: str, precio_base: float, categoria_id: int, 
                          descripcion: str = "", estado: str = "Activo") -> bool:
-        """
-        Inserta un nuevo producto en la base de datos
-        
-        Args:
-            nombre (str): Nombre del producto
-            precio_base (float): Precio base del producto
-            categoria_id (int): ID de la categoría
-            descripcion (str): Descripción del producto
-            estado (str): Estado del producto
-            
-        Returns:
-            bool: True si se insertó correctamente, False en caso contrario
-        """
         try:
             if not self.conectar():
                 return False
@@ -210,18 +166,6 @@ class BaseDatos:
     
     def insertar_impuesto_adicional(self, nombre: str, tasa: float, descripcion: str = "",
                                    categoria_id: Optional[int] = None) -> bool:
-        """
-        Inserta un nuevo impuesto adicional
-        
-        Args:
-            nombre (str): Nombre del impuesto
-            tasa (float): Tasa del impuesto (0.0 a 1.0)
-            descripcion (str): Descripción del impuesto
-            categoria_id (int, optional): ID de la categoría específica (None para todas)
-            
-        Returns:
-            bool: True si se insertó correctamente, False en caso contrario
-        """
         try:
             if not self.conectar():
                 return False
@@ -244,20 +188,6 @@ class BaseDatos:
     
     def insertar_transaccion(self, producto_id: int, cantidad: int, precio_unitario: float,
                            subtotal: float, total_impuestos: float, total_final: float) -> bool:
-        """
-        Inserta una nueva transacción/venta
-        
-        Args:
-            producto_id (int): ID del producto
-            cantidad (int): Cantidad vendida
-            precio_unitario (float): Precio por unidad
-            subtotal (float): Subtotal de la venta
-            total_impuestos (float): Total de impuestos
-            total_final (float): Total final
-            
-        Returns:
-            bool: True si se insertó correctamente, False en caso contrario
-        """
         try:
             if not self.conectar():
                 return False
@@ -282,25 +212,10 @@ class BaseDatos:
     def actualizar_producto(self, producto_id: int, nombre: str = None, precio_base: float = None,
                            categoria_id: int = None, descripcion: str = None, 
                            estado: str = None) -> bool:
-        """
-        Actualiza un producto existente
-        
-        Args:
-            producto_id (int): ID del producto a actualizar
-            nombre (str, optional): Nuevo nombre
-            precio_base (float, optional): Nuevo precio base
-            categoria_id (int, optional): Nueva categoría
-            descripcion (str, optional): Nueva descripción
-            estado (str, optional): Nuevo estado
-            
-        Returns:
-            bool: True si se actualizó correctamente, False en caso contrario
-        """
         try:
             if not self.conectar():
                 return False
             
-            # Construir la consulta dinámicamente
             campos_actualizar = []
             valores = []
             
@@ -325,7 +240,7 @@ class BaseDatos:
                 valores.append(estado)
             
             if not campos_actualizar:
-                return False  # No hay nada que actualizar
+                return False
             
             campos_actualizar.append("fecha_actualizacion = CURRENT_TIMESTAMP")
             valores.append(producto_id)
@@ -355,18 +270,6 @@ class BaseDatos:
     
     def actualizar_categoria(self, categoria_id: int, nombre: str = None, 
                            descripcion: str = None, tasa_iva: float = None) -> bool:
-        """
-        Actualiza una categoría existente
-        
-        Args:
-            categoria_id (int): ID de la categoría a actualizar
-            nombre (str, optional): Nuevo nombre
-            descripcion (str, optional): Nueva descripción
-            tasa_iva (float, optional): Nueva tasa de IVA
-            
-        Returns:
-            bool: True si se actualizó correctamente, False en caso contrario
-        """
         try:
             if not self.conectar():
                 return False
@@ -415,20 +318,10 @@ class BaseDatos:
             self.desconectar()
     
     def eliminar_producto(self, producto_id: int) -> bool:
-        """
-        Elimina un producto de la base de datos
-        
-        Args:
-            producto_id (int): ID del producto a eliminar
-            
-        Returns:
-            bool: True si se eliminó correctamente, False en caso contrario
-        """
         try:
             if not self.conectar():
                 return False
             
-            # Verificar si hay transacciones asociadas
             self.cursor.execute("SELECT COUNT(*) FROM transacciones WHERE producto_id = ?", (producto_id,))
             transacciones_asociadas = self.cursor.fetchone()[0]
             
@@ -454,20 +347,10 @@ class BaseDatos:
             self.desconectar()
     
     def eliminar_categoria(self, categoria_id: int) -> bool:
-        """
-        Elimina una categoría de la base de datos
-        
-        Args:
-            categoria_id (int): ID de la categoría a eliminar
-            
-        Returns:
-            bool: True si se eliminó correctamente, False en caso contrario
-        """
         try:
             if not self.conectar():
                 return False
             
-            # Verificar si hay productos asociados
             self.cursor.execute("SELECT COUNT(*) FROM productos WHERE categoria_id = ?", (categoria_id,))
             productos_asociados = self.cursor.fetchone()[0]
             
@@ -493,12 +376,6 @@ class BaseDatos:
             self.desconectar()
     
     def consultar_todos_productos(self) -> List[Dict]:
-        """
-        Consulta todos los productos con información de categoría
-        
-        Returns:
-            List[Dict]: Lista de productos con sus datos
-        """
         try:
             if not self.conectar():
                 return []
@@ -528,15 +405,6 @@ class BaseDatos:
             self.desconectar()
     
     def consultar_producto_por_id(self, producto_id: int) -> Optional[Dict]:
-        """
-        Consulta un producto específico por su ID
-        
-        Args:
-            producto_id (int): ID del producto
-            
-        Returns:
-            Optional[Dict]: Datos del producto o None si no existe
-        """
         try:
             if not self.conectar():
                 return None
@@ -564,15 +432,6 @@ class BaseDatos:
             self.desconectar()
     
     def consultar_productos_por_categoria(self, categoria_id: int) -> List[Dict]:
-        """
-        Consulta productos por categoría
-        
-        Args:
-            categoria_id (int): ID de la categoría
-            
-        Returns:
-            List[Dict]: Lista de productos de la categoría
-        """
         try:
             if not self.conectar():
                 return []
@@ -603,12 +462,6 @@ class BaseDatos:
             self.desconectar()
     
     def consultar_todas_categorias(self) -> List[Dict]:
-        """
-        Consulta todas las categorías
-        
-        Returns:
-            List[Dict]: Lista de categorías
-        """
         try:
             if not self.conectar():
                 return []
@@ -635,15 +488,6 @@ class BaseDatos:
             self.desconectar()
     
     def consultar_transacciones_recientes(self, limite: int = 10) -> List[Dict]:
-        """
-        Consulta las transacciones más recientes
-        
-        Args:
-            limite (int): Número máximo de transacciones a consultar
-            
-        Returns:
-            List[Dict]: Lista de transacciones
-        """
         try:
             if not self.conectar():
                 return []
@@ -675,19 +519,12 @@ class BaseDatos:
             self.desconectar()
     
     def obtener_estadisticas(self) -> Dict:
-        """
-        Obtiene estadísticas generales de la base de datos
-        
-        Returns:
-            Dict: Diccionario con estadísticas
-        """
         try:
             if not self.conectar():
                 return {}
             
             estadisticas = {}
             
-            # Contar productos por estado
             self.cursor.execute("""
                 SELECT estado, COUNT(*) as cantidad
                 FROM productos
@@ -695,19 +532,15 @@ class BaseDatos:
             """)
             estadisticas['productos_por_estado'] = dict(self.cursor.fetchall())
             
-            # Contar categorías
             self.cursor.execute("SELECT COUNT(*) FROM categorias")
             estadisticas['total_categorias'] = self.cursor.fetchone()[0]
             
-            # Contar productos
             self.cursor.execute("SELECT COUNT(*) FROM productos")
             estadisticas['total_productos'] = self.cursor.fetchone()[0]
             
-            # Contar transacciones
             self.cursor.execute("SELECT COUNT(*) FROM transacciones")
             estadisticas['total_transacciones'] = self.cursor.fetchone()[0]
             
-            # Valor total de transacciones
             self.cursor.execute("SELECT SUM(total_final) FROM transacciones")
             resultado = self.cursor.fetchone()[0]
             estadisticas['valor_total_ventas'] = resultado if resultado else 0
@@ -721,19 +554,11 @@ class BaseDatos:
             self.desconectar()
     
     def inicializar_datos_ejemplo(self) -> bool:
-        """
-        Inserta datos de ejemplo en la base de datos
-        
-        Returns:
-            bool: True si se insertaron correctamente, False en caso contrario
-        """
         try:
-            # Verificar si ya hay datos
             categorias_existentes = self.consultar_todas_categorias()
             if len(categorias_existentes) > 0:
-                return False  # Ya hay datos, no inicializar
+                return False
             
-            # Insertar categorías de ejemplo
             categorias_ejemplo = [
                 ("Alimentos Básicos", "Productos alimenticios básicos", 0.05),
                 ("Licores", "Bebidas alcohólicas", 0.19),
@@ -747,11 +572,9 @@ class BaseDatos:
                 if not self.insertar_categoria(nombre, descripcion, tasa_iva):
                     return False
             
-            # Obtener las categorías recién insertadas para obtener sus IDs
             categorias = self.consultar_todas_categorias()
             categoria_map = {cat['nombre']: cat['id'] for cat in categorias}
             
-            # Insertar productos de ejemplo
             productos_ejemplo = [
                 ("Arroz 500g", "Arroz blanco de 500 gramos", 2500.0, "Alimentos Básicos", "Activo"),
                 ("Cerveza Nacional", "Cerveza nacional 330ml", 3500.0, "Licores", "Activo"),
@@ -767,7 +590,6 @@ class BaseDatos:
                     if not self.insertar_producto(nombre, precio, categoria_id, descripcion, estado):
                         return False
             
-            # Insertar impuestos adicionales
             impuestos_ejemplo = [
                 ("Impuesto Nacional al Consumo", 0.08, "INC para combustibles", "Combustibles"),
                 ("Impuesto de Rentas a los Licores", 0.25, "Impuesto especial para licores", "Licores"),
@@ -785,3 +607,5 @@ class BaseDatos:
         except Exception as e:
             print(f"Error al inicializar datos de ejemplo: {e}")
             return False
+
+
