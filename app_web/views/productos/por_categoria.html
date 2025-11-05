@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Productos por Categoría{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-tags"></i> Productos por Categoría</h3>
+            </div>
+            <div class="card-body">
+                {% if productos_por_categoria %}
+                    {% for categoria, productos in productos_por_categoria.items() %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">{{ categoria }}</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if productos %}
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Precio Base</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for producto in productos %}
+                                        <tr>
+                                            <td>{{ producto.id }}</td>
+                                            <td>{{ producto.nombre }}</td>
+                                            <td>${{ "{:,.2f}".format(producto.precio_base) }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if producto.estado == 'Activo' else 'secondary' if producto.estado == 'Inactivo' else 'danger' }}">
+                                                    {{ producto.estado }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <p class="text-muted">No hay productos en esta categoría.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No hay productos registrados.
+                </div>
+                {% endif %}
+                <a href="{{ url_for('productos.listar') }}" class="btn btn-secondary mt-3">
+                    <i class="bi bi-arrow-left"></i> Volver a Productos
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

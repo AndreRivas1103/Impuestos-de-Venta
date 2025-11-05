@@ -13,6 +13,26 @@ La aplicacion devolvera los calculos de estos y mostrar el valor total a pagar e
 ```
 Impuestos-de-Venta/
 │
+├── app_web/                         # Aplicación Web Flask (MVC)
+│   ├── controllers/                 # Controladores (Blueprints)
+│   │   ├── home_controller.py
+│   │   ├── productos_controller.py
+│   │   ├── categorias_controller.py
+│   │   ├── transacciones_controller.py
+│   │   ├── calculadora_controller.py
+│   │   └── estadisticas_controller.py
+│   ├── views/                       # Templates HTML
+│   │   ├── base.html
+│   │   ├── home/
+│   │   ├── productos/
+│   │   ├── categorias/
+│   │   ├── transacciones/
+│   │   ├── calculadora/
+│   │   └── estadisticas/
+│   ├── static/                      # Archivos estáticos (CSS, JS)
+│   │   └── css/
+│   └── __init__.py                  # Factory de Flask
+│
 ├── docs/
 │   └── Libro de excel - Casos de prueba - Andre y Paull.xlsx
 │
@@ -25,7 +45,10 @@ Impuestos-de-Venta/
 │   ├── db/
 │   │   └── database.py             # Capa de acceso a datos (SQLite)
 │   ├── model/
-│   │   └── calculadora_impuestos.py
+│   │   ├── calculadora_impuestos.py
+│   │   ├── producto.py
+│   │   ├── categoria.py
+│   │   └── transaccion.py
 │   └── ui/
 │       ├── interfaz_consola.py     # Interfaz de consola
 │       ├── interfaz_database.py    # Interfaz de consola para BD
@@ -36,12 +59,119 @@ Impuestos-de-Venta/
 │   └── test_calculadora_impuestos.py
 │
 ├── build_executable.py
+├── run_web.py                       # Script para ejecutar la app web
 ├── setup.py
 └── README.md
 ```
 
 
 ### Pasos para ejecutar
+
+## 🌐 Aplicación Web (Flask)
+
+La aplicación web proporciona todas las funcionalidades de gestión de productos, categorías, transacciones y cálculo de impuestos a través de una interfaz web moderna.
+
+#### Requisitos Previos
+1. Python 3.7 o superior
+2. Base de datos SQLite (se crea automáticamente)
+
+#### Instalación y Ejecución
+
+1. **Instalar dependencias:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Ejecutar la aplicación web:**
+   ```bash
+   python run_web.py
+   ```
+
+3. **Abrir en el navegador:**
+   - La aplicación estará disponible en: `http://localhost:5000`
+   - O en: `http://127.0.0.1:5000`
+
+#### Configuración Inicial de la Base de Datos
+
+Si es la primera vez que ejecuta la aplicación o necesita una base de datos en blanco:
+
+1. Acceda a la página principal en `http://localhost:5000`
+2. En el menú de inicio, encontrará la sección "Configuración de Base de Datos"
+3. Haga clic en **"Crear Tablas"** para crear todas las tablas necesarias
+4. (Opcional) Haga clic en **"Inicializar Datos de Ejemplo"** para cargar datos de prueba
+
+#### Funcionalidades Web Disponibles
+
+- **Menú de Inicio**: Acceso a todas las funcionalidades y configuración de BD
+- **Gestión de Productos**: 
+  - ✅ Listar todos los productos
+  - ✅ Buscar producto por ID
+  - ✅ Crear nuevo producto
+  - ✅ Modificar producto existente
+  - ✅ Eliminar producto
+- **Gestión de Categorías**:
+  - ✅ Listar todas las categorías
+  - ✅ Buscar categoría por ID
+  - ✅ Crear nueva categoría
+  - ✅ Modificar categoría existente
+  - ✅ Eliminar categoría
+- **Transacciones**:
+  - ✅ Listar transacciones recientes
+  - ✅ Registrar nueva transacción de venta
+- **Calculadora de Impuestos**: Cálculo interactivo de impuestos
+- **Estadísticas y Consultas Avanzadas**:
+  - Productos más caros
+  - Productos más baratos
+  - Ventas por categoría
+  - Productos por estado
+
+#### Estructura MVC
+
+La aplicación web sigue el patrón **Model-View-Controller (MVC)** con Blueprints de Flask:
+
+- **Model**: `src/model/` - Clases de dominio (Producto, Categoria, Transaccion, CalculadoraImpuestos)
+- **View**: `app_web/views/` - Templates HTML (Jinja2)
+- **Controller**: `app_web/controllers/` - Blueprints de Flask que manejan las rutas
+
+#### Despliegue en Producción
+
+Para desplegar la aplicación web en plataformas como Heroku, Railway, Render, o cualquier servidor:
+
+1. **Instalar gunicorn para producción:**
+   ```bash
+   pip install gunicorn
+   ```
+
+2. **Crear un archivo `Procfile` (para Heroku/Railway):**
+   ```
+   web: gunicorn run_web:app --bind 0.0.0.0:$PORT
+   ```
+   
+   O para ejecutar directamente con Python:
+   ```
+   web: python run_web.py
+   ```
+
+3. **Variables de entorno (opcional):**
+   - `FLASK_ENV`: `production` o `development`
+   - `PORT`: Puerto donde correrá la aplicación (algunas plataformas lo asignan automáticamente)
+
+4. **Base de datos:**
+   - La aplicación usa SQLite por defecto (`calculadora_impuestos.db`)
+   - Para producción, considere usar PostgreSQL o MySQL para mejor rendimiento
+   - Asegúrese de que el archivo de BD tenga permisos de escritura
+
+5. **Ejemplo de despliegue en Railway:**
+   - Conecte su repositorio GitHub
+   - Railway detectará automáticamente Python
+   - Configure el comando de inicio: `python run_web.py`
+   - La aplicación estará disponible en la URL proporcionada por Railway
+
+6. **Ejemplo de despliegue en Render:**
+   - Conecte su repositorio
+   - Configure el servicio como "Web Service"
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `python run_web.py`
 
 #### Interfaz de Consola (sin base de datos)
 1. Descargar o clonar el proyecto
@@ -66,10 +196,12 @@ python src/app/main_database.py
    python src/ui/interfaz_gui.py
    ```
 
-### Ejecutar pruebas
+### Ejecutar pruebas unitarias
 ```bash
 python -m unittest tests/test_calculadora_impuestos.py
 ```
+
+**Nota**: Las pruebas unitarias no tienen llamados directos a la base de datos ni instrucciones SQL, solo prueban la lógica de negocio de la calculadora de impuestos.
 
 ### Generar Ejecutable para Windows
 Para crear un ejecutable independiente de Windows:

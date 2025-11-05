@@ -233,6 +233,10 @@ Temporary Items
 # Historial de cálculos exportados
 historial_impuestos_*.json
 
+# Bases de datos SQLite locales (no versionar datos)
+calculadora_impuestos.db
+*.db
+
 # Logs de la aplicación
 *.log
 

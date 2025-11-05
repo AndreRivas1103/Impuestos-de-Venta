@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Productos por Estado{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-list-check"></i> Productos por Estado</h3>
+            </div>
+            <div class="card-body">
+                {% if productos_por_estado %}
+                    {% for estado, productos in productos_por_estado.items() %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                {{ estado }} 
+                                <span class="badge bg-secondary">{{ productos|length }} producto(s)</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if productos %}
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Precio Base</th>
+                                            <th>Categoría</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for producto in productos %}
+                                        <tr>
+                                            <td>{{ producto.id }}</td>
+                                            <td>{{ producto.nombre }}</td>
+                                            <td>${{ "{:,.2f}".format(producto.precio_base) }}</td>
+                                            <td>{{ producto.categoria_nombre }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <p class="text-muted">No hay productos en este estado.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No hay productos registrados.
+                </div>
+                {% endif %}
+                <a href="{{ url_for('estadisticas.index') }}" class="btn btn-secondary mt-3">
+                    <i class="bi bi-arrow-left"></i> Volver a Estadísticas
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

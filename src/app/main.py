@@ -2,6 +2,12 @@
 Entrada principal CLI para la Calculadora de Impuestos.
 """
 
+import sys
+import os
+
+# Agregar el directorio raíz del proyecto al path para que funcionen las importaciones
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from src.ui.interfaz_consola import InterfazConsola
 
 

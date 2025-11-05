@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Estadísticas{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-graph-up"></i> Estadísticas del Sistema</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Total Categorías</h6>
+                                <p class="stat-value">{{ estadisticas.total_categorias or 0 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Total Productos</h6>
+                                <p class="stat-value">{{ estadisticas.total_productos or 0 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Total Transacciones</h6>
+                                <p class="stat-value">{{ estadisticas.total_transacciones or 0 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Valor Total Ventas</h6>
+                                <p class="stat-value">${{ "{:,.0f}".format(estadisticas.valor_total_ventas or 0) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if estadisticas.productos_por_estado %}
+                <hr class="my-4">
+                <h5>Productos por Estado</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for estado, cantidad in estadisticas.productos_por_estado.items() %}
+                            <tr>
+                                <td>{{ estado }}</td>
+                                <td>{{ cantidad }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                <hr class="my-4">
+                <h5>Consultas Avanzadas</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Productos Más Caros</h6>
+                                <p class="card-text">Top 5 productos con mayor precio</p>
+                                <a href="{{ url_for('estadisticas.productos_mas_caros') }}" class="btn btn-primary">Ver</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Productos Más Baratos</h6>
+                                <p class="card-text">Top 5 productos con menor precio</p>
+                                <a href="{{ url_for('estadisticas.productos_mas_baratos') }}" class="btn btn-primary">Ver</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Ventas por Categoría</h6>
+                                <p class="card-text">Análisis de ventas agrupadas por categoría</p>
+                                <a href="{{ url_for('estadisticas.ventas_por_categoria') }}" class="btn btn-primary">Ver</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Productos por Estado</h6>
+                                <p class="card-text">Productos agrupados por su estado</p>
+                                <a href="{{ url_for('estadisticas.productos_por_estado') }}" class="btn btn-primary">Ver</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

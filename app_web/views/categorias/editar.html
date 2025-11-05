@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Categoría{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-pencil"></i> Editar Categoría</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" 
+                               value="{{ categoria.nombre }}" placeholder="Deje en blanco para no cambiar">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
+                                  placeholder="Deje en blanco para no cambiar">{{ categoria.descripcion or '' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tasa_iva" class="form-label">Tasa de IVA</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" class="form-control" id="tasa_iva" name="tasa_iva" 
+                                   placeholder="Deje en blanco para no cambiar" min="0" max="100">
+                            <span class="input-group-text">%</span>
+                        </div>
+                        <small class="form-text text-muted">Valor actual: {{ "{:.0f}".format(categoria.tasa_iva * 100) }}% ({{ categoria.tasa_iva }})</small>
+                        <small class="form-text text-muted d-block">Ingrese como porcentaje (ej: 19 para 19%) o decimal (ej: 0.19)</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Actualizar Categoría
+                    </button>
+                    <a href="{{ url_for('categorias.listar') }}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

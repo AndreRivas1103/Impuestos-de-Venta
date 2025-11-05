@@ -2,6 +2,12 @@
 Entrada principal para la app con base de datos.
 """
 
+import sys
+import os
+
+# Agregar el directorio raíz del proyecto al path para que funcionen las importaciones
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from src.ui.interfaz_database import InterfazDatabase
 
 

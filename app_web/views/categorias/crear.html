@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Categoría{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-plus-circle"></i> Crear Nueva Categoría</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label required-field">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tasa_iva" class="form-label required-field">Tasa de IVA</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" class="form-control" id="tasa_iva" name="tasa_iva" 
+                                   value="0.19" required min="0" max="1">
+                            <span class="input-group-text">(0.0 a 1.0)</span>
+                        </div>
+                        <small class="form-text text-muted">Ingrese como decimal (ej: 0.19 para 19%)</small>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Crear Categoría
+                    </button>
+                    <a href="{{ url_for('categorias.listar') }}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

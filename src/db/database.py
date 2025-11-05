@@ -5,9 +5,13 @@ Implementa un ORM simple para gestionar productos, categorías e impuestos
 
 import sqlite3
 import os
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Union
 from datetime import datetime
 from enum import Enum
+
+from src.model.producto import Producto
+from src.model.categoria import Categoria
+from src.model.transaccion import Transaccion
 
 class EstadoProducto(Enum):
     ACTIVO = "Activo"
@@ -375,7 +379,7 @@ class BaseDatos:
         finally:
             self.desconectar()
     
-    def consultar_todos_productos(self) -> List[Dict]:
+    def consultar_todos_productos(self, como_modelos: bool = False) -> Union[List[Dict], List[Producto]]:
         try:
             if not self.conectar():
                 return []
@@ -383,7 +387,7 @@ class BaseDatos:
             self.cursor.execute("""
                 SELECT p.id, p.nombre, p.descripcion, p.precio_base, 
                        p.estado, p.fecha_creacion, p.fecha_actualizacion,
-                       c.nombre as categoria_nombre, c.tasa_iva
+                       c.id as categoria_id, c.nombre as categoria_nombre, c.tasa_iva
                 FROM productos p
                 JOIN categorias c ON p.categoria_id = c.id
                 ORDER BY p.nombre
@@ -393,8 +397,11 @@ class BaseDatos:
             productos = []
             
             for fila in self.cursor.fetchall():
-                producto = dict(zip(columnas, fila))
-                productos.append(producto)
+                producto_dict = dict(zip(columnas, fila))
+                if como_modelos:
+                    productos.append(Producto.desde_dict(producto_dict))
+                else:
+                    productos.append(producto_dict)
             
             return productos
             
@@ -404,7 +411,7 @@ class BaseDatos:
         finally:
             self.desconectar()
     
-    def consultar_producto_por_id(self, producto_id: int) -> Optional[Dict]:
+    def consultar_producto_por_id(self, producto_id: int, como_modelo: bool = False) -> Union[Optional[Dict], Optional[Producto]]:
         try:
             if not self.conectar():
                 return None
@@ -412,7 +419,7 @@ class BaseDatos:
             self.cursor.execute("""
                 SELECT p.id, p.nombre, p.descripcion, p.precio_base, 
                        p.estado, p.fecha_creacion, p.fecha_actualizacion,
-                       c.nombre as categoria_nombre, c.tasa_iva
+                       c.id as categoria_id, c.nombre as categoria_nombre, c.tasa_iva
                 FROM productos p
                 JOIN categorias c ON p.categoria_id = c.id
                 WHERE p.id = ?
@@ -421,7 +428,10 @@ class BaseDatos:
             fila = self.cursor.fetchone()
             if fila:
                 columnas = [descripcion[0] for descripcion in self.cursor.description]
-                return dict(zip(columnas, fila))
+                producto_dict = dict(zip(columnas, fila))
+                if como_modelo:
+                    return Producto.desde_dict(producto_dict)
+                return producto_dict
             
             return None
             
@@ -431,7 +441,7 @@ class BaseDatos:
         finally:
             self.desconectar()
     
-    def consultar_productos_por_categoria(self, categoria_id: int) -> List[Dict]:
+    def consultar_productos_por_categoria(self, categoria_id: int, como_modelos: bool = False) -> Union[List[Dict], List[Producto]]:
         try:
             if not self.conectar():
                 return []
@@ -439,7 +449,7 @@ class BaseDatos:
             self.cursor.execute("""
                 SELECT p.id, p.nombre, p.descripcion, p.precio_base, 
                        p.estado, p.fecha_creacion, p.fecha_actualizacion,
-                       c.nombre as categoria_nombre, c.tasa_iva
+                       c.id as categoria_id, c.nombre as categoria_nombre, c.tasa_iva
                 FROM productos p
                 JOIN categorias c ON p.categoria_id = c.id
                 WHERE p.categoria_id = ?
@@ -450,8 +460,11 @@ class BaseDatos:
             productos = []
             
             for fila in self.cursor.fetchall():
-                producto = dict(zip(columnas, fila))
-                productos.append(producto)
+                producto_dict = dict(zip(columnas, fila))
+                if como_modelos:
+                    productos.append(Producto.desde_dict(producto_dict))
+                else:
+                    productos.append(producto_dict)
             
             return productos
             
@@ -461,7 +474,7 @@ class BaseDatos:
         finally:
             self.desconectar()
     
-    def consultar_todas_categorias(self) -> List[Dict]:
+    def consultar_todas_categorias(self, como_modelos: bool = False) -> Union[List[Dict], List[Categoria]]:
         try:
             if not self.conectar():
                 return []
@@ -476,8 +489,11 @@ class BaseDatos:
             categorias = []
             
             for fila in self.cursor.fetchall():
-                categoria = dict(zip(columnas, fila))
-                categorias.append(categoria)
+                categoria_dict = dict(zip(columnas, fila))
+                if como_modelos:
+                    categorias.append(Categoria.desde_dict(categoria_dict))
+                else:
+                    categorias.append(categoria_dict)
             
             return categorias
             
@@ -487,13 +503,13 @@ class BaseDatos:
         finally:
             self.desconectar()
     
-    def consultar_transacciones_recientes(self, limite: int = 10) -> List[Dict]:
+    def consultar_transacciones_recientes(self, limite: int = 10, como_modelos: bool = False) -> Union[List[Dict], List[Transaccion]]:
         try:
             if not self.conectar():
                 return []
             
             self.cursor.execute("""
-                SELECT t.id, t.cantidad, t.precio_unitario, t.subtotal, 
+                SELECT t.id, t.producto_id, t.cantidad, t.precio_unitario, t.subtotal, 
                        t.total_impuestos, t.total_final, t.fecha_transaccion,
                        p.nombre as producto_nombre, c.nombre as categoria_nombre
                 FROM transacciones t
@@ -507,8 +523,11 @@ class BaseDatos:
             transacciones = []
             
             for fila in self.cursor.fetchall():
-                transaccion = dict(zip(columnas, fila))
-                transacciones.append(transaccion)
+                transaccion_dict = dict(zip(columnas, fila))
+                if como_modelos:
+                    transacciones.append(Transaccion.desde_dict(transaccion_dict))
+                else:
+                    transacciones.append(transaccion_dict)
             
             return transacciones
             

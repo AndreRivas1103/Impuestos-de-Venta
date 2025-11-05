@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Ventas por Categoría{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-pie-chart"></i> Ventas por Categoría</h3>
+            </div>
+            <div class="card-body">
+                {% if ventas_por_categoria %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Cantidad Vendida</th>
+                                <th>Total Ventas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for categoria, datos in ventas_por_categoria.items() %}
+                            <tr>
+                                <td><strong>{{ categoria }}</strong></td>
+                                <td>{{ datos.cantidad }}</td>
+                                <td>${{ "{:,.2f}".format(datos.total) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-primary">
+                                <th>Total</th>
+                                <th>{{ ventas_por_categoria.values() | sum(attribute='cantidad') }}</th>
+                                <th>${{ "{:,.2f}".format(ventas_por_categoria.values() | sum(attribute='total')) }}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No hay transacciones registradas para analizar.
+                </div>
+                {% endif %}
+                <a href="{{ url_for('estadisticas.index') }}" class="btn btn-secondary mt-3">
+                    <i class="bi bi-arrow-left"></i> Volver a Estadísticas
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

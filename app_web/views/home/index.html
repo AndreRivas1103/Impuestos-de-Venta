@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Calculadora de Impuestos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0"><i class="bi bi-house-door"></i> Menú Principal</h3>
+            </div>
+            <div class="card-body">
+                <p class="lead">Bienvenido al Sistema de Gestión de Productos e Impuestos</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-box"></i> Productos</h5>
+                                <p class="card-text">Gestiona productos: crear, buscar, modificar y eliminar.</p>
+                                <a href="{{ url_for('productos.listar') }}" class="btn btn-primary">Gestionar Productos</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-tags"></i> Categorías</h5>
+                                <p class="card-text">Gestiona categorías de productos y sus tasas de impuestos.</p>
+                                <a href="{{ url_for('categorias.listar') }}" class="btn btn-primary">Gestionar Categorías</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-cart"></i> Transacciones</h5>
+                                <p class="card-text">Registra y consulta transacciones de venta.</p>
+                                <a href="{{ url_for('transacciones.listar') }}" class="btn btn-primary">Ver Transacciones</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-calculator"></i> Calculadora</h5>
+                                <p class="card-text">Calcula impuestos de venta según la categoría del producto.</p>
+                                <a href="{{ url_for('calculadora.index') }}" class="btn btn-primary">Usar Calculadora</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="bi bi-database"></i> Configuración de Base de Datos</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Si es la primera vez que usa la aplicación o necesita reinicializar la base de datos:</p>
+                        <form method="POST" action="{{ url_for('home.crear_tablas') }}" class="d-inline">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Crear Tablas
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('home.inicializar_datos') }}" class="d-inline ms-2">
+                            <button type="submit" class="btn btn-info">
+                                <i class="bi bi-database-add"></i> Inicializar Datos de Ejemplo
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
