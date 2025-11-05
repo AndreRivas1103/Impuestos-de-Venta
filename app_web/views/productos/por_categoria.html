@@ -25,7 +25,6 @@
                                             <th>ID</th>
                                             <th>Nombre</th>
                                             <th>Precio Base</th>
-                                            <th>Estado</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -34,11 +33,6 @@
                                             <td>{{ producto.id }}</td>
                                             <td>{{ producto.nombre }}</td>
                                             <td>${{ "{:,.2f}".format(producto.precio_base) }}</td>
-                                            <td>
-                                                <span class="badge bg-{{ 'success' if producto.estado == 'Activo' else 'secondary' if producto.estado == 'Inactivo' else 'danger' }}">
-                                                    {{ producto.estado }}
-                                                </span>
-                                            </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>

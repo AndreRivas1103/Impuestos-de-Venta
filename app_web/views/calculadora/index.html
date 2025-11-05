@@ -5,48 +5,33 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8 mx-auto">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0"><i class="bi bi-calculator"></i> Calculadora de Impuestos</h3>
+        <h3 class="mb-3">Calculadora de Impuestos</h3>
+        <form id="calculadoraForm" class="mb-3">
+            <div class="mb-3">
+                <label for="valor_base" class="form-label required-field">Valor base del producto</label>
+                <input type="number" step="0.01" class="form-control" id="valor_base" name="valor_base" required min="0.01">
             </div>
-            <div class="card-body">
-                <form id="calculadoraForm">
-                    <div class="mb-3">
-                        <label for="valor_base" class="form-label required-field">Valor Base del Producto</label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" class="form-control" id="valor_base" name="valor_base" required min="0.01">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="categoria" class="form-label required-field">Categoría</label>
-                        <select class="form-select" id="categoria" name="categoria" required>
-                            <option value="">Seleccione una categoría</option>
-                            {% for categoria in categorias %}
-                            <option value="{{ categoria }}">{{ categoria }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-calculator"></i> Calcular Impuestos
-                    </button>
-                    <button type="reset" class="btn btn-secondary">Limpiar</button>
-                </form>
+            <div class="mb-3">
+                <label for="categoria" class="form-label required-field">Categoría</label>
+                <select class="form-select" id="categoria" name="categoria" required>
+                    <option value="">Seleccione una categoría</option>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria }}">{{ categoria }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Calcular</button>
+            <button type="reset" class="btn btn-outline-secondary btn-sm">Limpiar</button>
+        </form>
 
-                <div id="resultado" class="mt-4" style="display: none;">
-                    <hr>
-                    <h5>Resultado del Cálculo:</h5>
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <p><strong>Valor Base:</strong> $<span id="valor_base_resultado"></span></p>
-                            <p><strong>Categoría:</strong> <span id="categoria_resultado"></span></p>
-                            <div id="impuestos_detalle"></div>
-                            <hr>
-                            <p class="mb-0"><strong>Total Impuestos:</strong> $<span id="total_impuestos"></span></p>
-                            <p class="h5"><strong>Valor Total:</strong> $<span id="valor_total"></span></p>
-                        </div>
-                    </div>
-                </div>
+        <div id="resultado" class="mt-3" style="display: none;">
+            <h6>Resultado</h6>
+            <div class="p-3 border rounded bg-light">
+                <p class="mb-1"><strong>Valor base:</strong> $<span id="valor_base_resultado"></span></p>
+                <p class="mb-2"><strong>Categoría:</strong> <span id="categoria_resultado"></span></p>
+                <div id="impuestos_detalle" class="mb-2"></div>
+                <p class="mb-1"><strong>Total impuestos:</strong> $<span id="total_impuestos"></span></p>
+                <p class="mb-0"><strong>Total:</strong> $<span id="valor_total"></span></p>
             </div>
         </div>
     </div>
@@ -57,23 +42,18 @@
 <script>
 document.getElementById('calculadoraForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    
     const formData = new FormData(this);
     const resultadoDiv = document.getElementById('resultado');
-    
     try {
         const response = await fetch('{{ url_for("calculadora.calcular") }}', {
             method: 'POST',
             body: formData
         });
-        
         const data = await response.json();
-        
         if (response.ok) {
             document.getElementById('valor_base_resultado').textContent = data.valor_base.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('categoria_resultado').textContent = data.categoria;
-            
-            let impuestosHTML = '<p><strong>Desglose de Impuestos:</strong></p><ul>';
+            let impuestosHTML = '<p class="mb-1"><strong>Desglose:</strong></p><ul class="mb-2">';
             for (const [impuesto, valor] of Object.entries(data.impuestos)) {
                 if (valor > 0) {
                     impuestosHTML += `<li>${impuesto}: $${valor.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</li>`;
@@ -81,10 +61,8 @@ document.getElementById('calculadoraForm').addEventListener('submit', async func
             }
             impuestosHTML += '</ul>';
             document.getElementById('impuestos_detalle').innerHTML = impuestosHTML;
-            
             document.getElementById('total_impuestos').textContent = data.total_impuestos.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('valor_total').textContent = data.valor_total.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            
             resultadoDiv.style.display = 'block';
         } else {
             alert('Error: ' + data.error);

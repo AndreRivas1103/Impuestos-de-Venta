@@ -14,10 +14,7 @@
                     {% for estado, productos in productos_por_estado.items() %}
                     <div class="card mb-3">
                         <div class="card-header">
-                            <h5 class="mb-0">
-                                {{ estado }} 
-                                <span class="badge bg-secondary">{{ productos|length }} producto(s)</span>
-                            </h5>
+                            <h5 class="mb-0">{{ estado }}</h5>
                         </div>
                         <div class="card-body">
                             {% if productos %}

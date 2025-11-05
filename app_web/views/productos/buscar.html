@@ -32,11 +32,7 @@
                         <p><strong>Precio Base:</strong> ${{ "{:,.2f}".format(producto.precio_base) }}</p>
                         <p><strong>Categoría:</strong> {{ producto.categoria_nombre }}</p>
                         <p><strong>IVA:</strong> {{ "{:.0f}".format(producto.tasa_iva * 100) }}%</p>
-                        <p><strong>Estado:</strong> 
-                            <span class="badge bg-{{ 'success' if producto.estado == 'Activo' else 'secondary' if producto.estado == 'Inactivo' else 'danger' }}">
-                                {{ producto.estado }}
-                            </span>
-                        </p>
+                        <p><strong>Estado:</strong> {{ producto.estado }}</p>
                         <p><strong>Fecha Creación:</strong> {{ producto.fecha_creacion }}</p>
                         <a href="{{ url_for('productos.editar', producto_id=producto.id) }}" class="btn btn-primary mt-2">
                             <i class="bi bi-pencil"></i> Editar Producto
