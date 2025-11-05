@@ -42,20 +42,6 @@ Impuestos-de-Venta/
 └── runtime.txt                   # Versión de Python
 ```
 
-## Despliegue en Render
-1. Conecta el repositorio y crea un Web Service.
-2. Build Command:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Start Command (o usa `Procfile`):
-   ```bash
-   gunicorn run_web:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
-   ```
-4. Variables de entorno recomendadas:
-   - `FLASK_ENV=production`
-   - `SECRET_KEY` (define un valor seguro)
-5. Persistencia: por defecto se usa SQLite (`calculadora_impuestos.db`). En Render el sistema de archivos del contenedor es efímero; para persistir, usa un Disco Persistente o migra a una base de datos gestionada (p. ej., PostgreSQL) y ajusta la conexión.
 
 ## Funcionalidades
 - CRUD de productos y categorías
